@@ -11,7 +11,12 @@ Run the script (after reading it first):
 > cd opencv_install  
 > sudo ./install_opencv.sh  
 
+This may take some time.  
+
 ## Build the streamer and receiver apps
+Return to the root directory.  
+
+> cd ../  
 > mkdir build  
 > cd build  
 > cmake ..  
