@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
     signal(SIGINT, signalHandler);  
 
-    VideoStreamer stream_test("/dev/video0", "127.0.0.1", port_number);
+    VideoStreamer stream_test("/dev/video0", ip_address, port_number);
     
     while (!shutdown_flag) {
 
