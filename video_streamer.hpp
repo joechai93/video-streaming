@@ -34,7 +34,7 @@ class VideoStreamer {
     public:
         VideoStreamer(std::string webcam_device, std::string ip_address, uint16_t port);
         ~VideoStreamer();
-        void StreamVideo(void);
+        void StreamVideo(bool detect_face);
 
     private:
         cv::VideoCapture m_video_capture;

@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Joe Chai
+Copyright (c) 2021 Joe Chai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "video_streamer.hpp"
+#ifndef __FACE_DETECTOR_H__
+#define __FACE_DETECTOR_H__
 
-#include <csignal>
-#include <iostream> 
+#include <opencv2/objdetect.hpp>
+#include <opencv2/imgproc.hpp>
 
-bool shutdown_flag = false;
+class FaceDetector {
+    public:
+        static cv::Mat DetectAndDraw(cv::Mat& img, cv::CascadeClassifier& cascade,
+                        cv::CascadeClassifier& nestedCascade,
+                        double scale);
+};
 
-void usage();
-
-void signalHandler( int signum ) {
-    std::cout << "Interrupt signal (" << signum << ") received.\n";
-    shutdown_flag = true;
-}
-
-int main(int argc, char** argv)
-{
-    if (argc != 3)
-    {
-        usage();
-        exit(0);
-    }
-
-    std::string ip_address = argv[1];
-    int port_number = std::stoi(argv[2]);
-
-    signal(SIGINT, signalHandler);  
-
-    VideoStreamer stream_test("/dev/video0", ip_address, port_number);
-    
-    while (!shutdown_flag) {
-
-        stream_test.StreamVideo(true);
-    }
-
-    std::cout << "Program terminating. \n";
-
-    return 0;
-}
-
-void usage()
-{
-    std::cout << "./stream_video" << "[ip address] [port number]" << std::endl <<
-      "Example: ./stream_video 127.0.0.1 1234" << std::endl;
-}
+#endif /* __FACE_DETECTOR_H__ */

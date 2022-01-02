@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "video_streamer.h"
+#include "video_streamer.hpp"
+#include "face_detector.hpp"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -79,23 +80,31 @@ VideoStreamer::~VideoStreamer()
 }
 
 
-void VideoStreamer::StreamVideo(void)
+void VideoStreamer::StreamVideo(bool detect_face)
 {
+    cv::CascadeClassifier cascade, nested_cascade;
+    cascade.load( "../data/haarcascade_frontalcatface.xml" ) ; 
+    nested_cascade.load( "../data/haarcascade_eye_tree_eyeglasses.xml" ) ;
+
     m_video_capture.read(m_frame);
     // cv::imshow("hi",m_frame);
     // cv::waitKey(1);
+    if (detect_face) {
+        cv::Mat frame1 = m_frame.clone();
+        cv::Mat annotated_imag = FaceDetector::DetectAndDraw( frame1, cascade, nested_cascade, 1.0); 
+        // char c = (char)cv::waitKey(10);
+        m_video_output.write(annotated_imag);
+    } else {
+        // std::string text_overlay = "Frame number: " + std::to_string(m_frame_number); 
+        // cv::putText(m_frame, text_overlay, cv::Point(50,50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0,0,0), 3);
 
-    std::string text_overlay = "Frame number: " + std::to_string(m_frame_number); 
-    cv::putText(m_frame, text_overlay, cv::Point(50,50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0,0,0), 3);
-
-    // filter and canny edge detect just for fun
-    //cv::medianBlur(mask, mask, 5);
-    // cv::GaussianBlur(m_frame, m_frame, cv::Size(7,7), 2);
-    // cv::Mat contours;
-    // cv::Canny(m_frame, contours, 290, 350);
-
-    m_video_output.write(m_frame);
-
+        // filter and canny edge detect just for fun
+        //cv::medianBlur(mask, mask, 5);
+        // cv::GaussianBlur(m_frame, m_frame, cv::Size(7,7), 2);
+        // cv::Mat contours;
+        // cv::Canny(m_frame, contours, 290, 350);
+        m_video_output.write(m_frame);
+    }
 
     m_frame_number += 1;
 }
