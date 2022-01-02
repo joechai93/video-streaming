@@ -9,7 +9,7 @@ An install script is provided (taken from opencv and modified to include gstream
 
 Run the script (after reading it first):  
 > cd opencv_install  
-> sudo ./install_opencv.sh  
+> sudo ./install-opencv.sh  
 
 This may take some time.  
 
